@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>图片预加载之无序加载-无序插件应用</title>
+        <style type="text/css">
+            html,body{
+                height: 100%;
+                overflow: hidden;
+            }
+            .none{
+                display: none;
+            }
+            a{
+                text-decoration: none;
+            }
+            .box{
+                text-align: center;
+            }
+            .btn{
+                height: 30px;
+                line-height: 30px;
+                display: inline-block;
+                border: 1px solid #eee;
+                background: #fff;
+                color: #333;
+                margin-right: 50px;
+                padding: 0 10px;
+            }
+            .btn:hover{
+                background-color: #eee;
+            }
+            .loading{
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: #eee;
+                text-align: center;
+                font-size: 30px;
+            }
+            .progress{
+                margin-top: 300px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="box">
+            <img src="http://img95.699pic.com/photo/50035/4052.jpg_wh300.jpg" id="img" width="500" height="350" />
+            <p>
+                <a href="javascript:;" class="btn" data-control="prev">上一页</a>
+                <a href="javascript:;" class="btn" data-control="next">下一页</a>
+            </p>
+        </div>
+        <div class="loading">
+            <p class="progress">0%</p>
+        </div>
+    </body>
+    <script type="text/javascript" src="js/jQuery.js"></script>
+    <script type="text/javascript" src="js/preload.js"></script>
+    <script type="text/javascript">
+        var imgs = [
+            'http://img95.699pic.com/photo/50035/4052.jpg_wh300.jpg',
+            'http://img95.699pic.com/photo/50035/0677.jpg_wh300.jpg',
+            'http://img95.699pic.com/photo/50034/3685.jpg_wh300.jpg',
+            'http://img95.699pic.com/photo/50035/3125.jpg_wh300.jpg',
+            'http://img95.699pic.com/photo/50033/8378.jpg_wh300.jpg',
+            'http://img95.699pic.com/photo/50032/4508.jpg_wh300.jpg',
+            'http://img95.699pic.com/photo/50035/4054.jpg_wh300.jpg',
+            'http://img95.699pic.com/photo/50035/4068.jpg_wh300.jpg',
+            'http://img95.699pic.com/photo/50035/1699.jpg_wh300.jpg',
+        ];
+        var index = 0,
+            len = imgs.length;
+        //调用插件
+        $.preload(imgs,{
+            //每一张图片加载执行
+            each:function(count){
+                $('.progress').html(Math.round((count+1) / len * 100) + '%');
+            },
+            //所有图片加载完成之后执行
+            all:function(){
+                $('.loading').hide();
+                // document.title = 1 + '/' + len;
+            }
+        })
+        $('.btn').on('click',function(){
+            if($(this).data('control') === "prev"){
+                index = Math.max(0,--index);
+            }else{
+                index = Math.min(len-1,++index);
+            }
+            console.log(index);
+            $('#img').attr('src',imgs[index]);
+            // document.title = (index+1) + '/' + len;
+        })
+    </script>
+</html>
